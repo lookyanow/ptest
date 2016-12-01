@@ -1,0 +1,10 @@
+{% include 'top.html' %}
+
+<table>
+{% for film in films %}
+<tr>
+<td>{{ film.title }}</td><td> {{ film.info_link }}</td>
+</tr>
+{% endfor %}
+</table>
+{% include 'bottom.html' %}

@@ -3,7 +3,9 @@
 <table>
 {% for film in films %}
 <tr>
-<td>{{ film.title }}</td><td> {{ film.info_link }}</td>
+<td>{{ film.title }}</td>
+<td> {{ film.info_link }}</td>
+<td> {{ film.view_date }}</td>
 </tr>
 {% endfor %}
 </table>

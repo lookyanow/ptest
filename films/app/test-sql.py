@@ -15,5 +15,3 @@ for i in conn.query("select * from films order by view_date desc"):
 films = []
 for i in conn.query("select * from films order by view_date desc"):
 	films.append(i)
-
-print films[0]

@@ -68,6 +68,9 @@ def getobjectid(days_ago):
 
 dump_id = getobjectid(1)
 
+# 1. Get dump 
+# 2. Remove all local data
+# 3. Restore data
 removealldocs('localhost') #VERY carefull with hostname 
 
 mongodump('ics-dct-prod-mongo-node1.ru.mgo.su','ics','events',dump_id)

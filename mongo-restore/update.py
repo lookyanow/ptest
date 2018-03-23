@@ -19,7 +19,7 @@ def mongodump(mongohost,db,collection,object_id):
     out, err = p.communicate()
     print out
     print err
-    print p.returncode
+    return p.returncode
 
 def mongorestore(mongohost='localhost'):
     """Restores mongodb dump to localhost"""
@@ -32,9 +32,9 @@ def mongorestore(mongohost='localhost'):
     out, err = p.communicate()
     print out
     print err
-    print p.returncode
+    return p.returncode
 
-def collectionlist(mongohost):
+def collectionlist(mongohost,db,user='',password=''):
     """Get collections list"""
     
     conn = MongoClient(mongohost,27017)
@@ -48,10 +48,12 @@ def removealldocs(mongohost='localhost'):
     conn = MongoClient(mongohost,27017)
 
     db = conn['ics']
-    colls = collectionlist('localhost')
+    colls = collectionlist('localhost','ics')
     for coll in colls:
         c = db[coll]
-        c.delete_many({})
+        result = c.delete_many({})
+        print result.deleted_count
+
 
 def getobjectid(days_ago):
     """Returns Mongodb Objectid than was some days in the past"""
@@ -66,15 +68,19 @@ def getobjectid(days_ago):
 #for collect in collection:
 #    print collect
 
-dump_id = getobjectid(1)
+dump_id = getobjectid(30)
 
 # 1. Get dump 
-# 2. Remove all local data
+# 2. Remove all local documents
 # 3. Restore data
-removealldocs('localhost') #VERY carefull with hostname 
 
-mongodump('ics-dct-prod-mongo-node1.ru.mgo.su','ics','events',dump_id)
+colls = collectionlist('localhost','ics')
 
-mongorestore()
+for coll in colls:
+    result = mongodump('ics-dct-prod-mongo-node1.ru.mgo.su','ics',coll,dump_id)
 
-
+if result ==0:
+    removealldocs('localhost') #VERY carefull with hostname
+    mongorestore()
+else:
+    print "Error during mongodump"
